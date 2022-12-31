@@ -1,0 +1,35 @@
+services:
+  my_server:
+    container_name: web_server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    volumes:
+      - ./login-signup:/var/www/html/
+    networks:
+      - lutf-network
+    depends_on:
+      - my_database
+
+  my_database:
+    container_name: database
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: taunsa
+      MYSQL_DATABASE: LUTF_DB
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d/
+      - lutf_volume:/var/lib/mysql
+    networks:
+      - lutf-network
+
+volumes:
+  lutf_volume:
+
+networks:
+  lutf-network:
